@@ -7,13 +7,18 @@
 <style>
   /* ============================================================
      ZONA DE PERSONALIZACIÓN
-     Sin fondos, sin bordes, sin sombras.
-     Con color: los textos + el punto "en directo".
      ============================================================ */
   :root{
-    --fg:     #f4f3ee;   /* color de la HORA  (claro, para Notion oscuro) */
-    --muted:  #9a9ba2;   /* color de ETIQUETA y FECHA                     */
-    --accent: #ff5c5c;   /* punto rojo "en directo"                       */
+    /* FONDO: por defecto imita el modo OSCURO de Notion (#191919),
+       así el bloque se funde con la página y NO se ve blanco.
+         - Si tu página está en claro:  usa  #ffffff
+         - Si de verdad lo quieres sin fondo: usa  transparent
+           (aviso: en muchos embeds de Notion eso se ve blanco). */
+    --bg:     #191919;
+
+    --fg:     #f4f3ee;   /* color de la HORA                 */
+    --muted:  #9a9ba2;   /* color de ETIQUETA y FECHA        */
+    --accent: #ff5c5c;   /* punto rojo "en directo"          */
     --font:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   }
   /* Tamaños: cambia los clamp() de #time y #date (mínimo, escalado, máximo). */
@@ -26,7 +31,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:transparent;      /* nada detrás */
+    background:var(--bg);        /* imita el fondo de Notion -> sin blanco */
     font-family:var(--font);
     -webkit-font-smoothing:antialiased;
   }
@@ -58,12 +63,12 @@
     font-size:clamp(2.4rem, 9vw, 4rem);
     font-weight:500;
     letter-spacing:-.01em;
-    font-variant-numeric:tabular-nums;   /* dígitos de ancho fijo */
+    font-variant-numeric:tabular-nums;
   }
 
   #date{
     color:var(--muted);
-    font-size:clamp(.7rem, 2vw, .8rem);  /* fecha pequeña */
+    font-size:clamp(.7rem, 2vw, .8rem);
     margin-top:clamp(10px, 3vw, 16px);
   }
 

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reloj</title>
+<style>
+  /* ============================================================
+     ZONA DE PERSONALIZACIÓN  —  toca solo estos valores
+     ============================================================ */
+  :root{
+    --card:   #16171b;               /* fondo de la tarjeta        */
+    --fg:     #f4f3ee;               /* color de la hora           */
+    --muted:  #8a8b92;               /* color de fecha y etiqueta  */
+    --accent: #ff5c5c;               /* punto "en directo"         */
+    --line:   rgba(255,255,255,.07); /* borde sutil de la tarjeta  */
+    --radius: 18px;
+    /* Para cambiar la tipografía, sustituye la línea de abajo.
+       Por defecto usa la mono del sistema (SF Mono en tu Mac). */
+    --font: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+
+  /* La etiqueta de arriba y la zona horaria se cambian en el <script> */
+  /* ============================================================ */
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html,body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:transparent;          /* flota sobre cualquier fondo de Notion */
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:clamp(20px, 5vw, 34px) clamp(26px, 6vw, 44px);
+    box-shadow:0 12px 40px rgba(0,0,0,.35);
+    text-align:center;
+    line-height:1;
+  }
+
+  .eyebrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    color:var(--muted);
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:clamp(12px, 3vw, 18px);
+  }
+
+  .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 8px var(--accent);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+
+  #time{
+    color:var(--fg);
+    font-size:clamp(2.4rem, 9vw, 4rem);
+    font-weight:500;
+    letter-spacing:-.01em;
+    font-variant-numeric:tabular-nums;  /* dígitos de ancho fijo: no bailan */
+  }
+
+  #date{
+    color:var(--muted);
+    font-size:clamp(.85rem, 2.5vw, .98rem);
+    margin-top:clamp(12px, 3vw, 18px);
+    letter-spacing:.01em;
+  }
+
+  @keyframes pulse{
+    0%,100%{ opacity:1;   transform:scale(1);    }
+    50%    { opacity:.35; transform:scale(.82);  }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dot{ animation:none; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="eyebrow"><span class="dot"></span><span id="label"></span></div>
+    <div id="time">--:--:--</div>
+    <div id="date">—</div>
+  </div>
+
+<script>
+  /* ====== AJUSTES ====== */
+  const ETIQUETA = "BARCELONA";      // texto de arriba (ponlo como quieras o "")
+  const ZONA     = "Europe/Madrid";  // zona horaria fija (correcta esté donde esté el equipo)
+  /* ===================== */
+
+  document.getElementById("label").textContent = ETIQUETA;
+
+  function actualizar(){
+    const ahora = new Date();
+
+    const hora = ahora.toLocaleTimeString("es-ES", {
+      timeZone: ZONA, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+    });
+
+    let fecha = ahora.toLocaleDateString("es-ES", {
+      timeZone: ZONA, weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
+    fecha = fecha.charAt(0).toUpperCase() + fecha.slice(1); // "Martes, 7 de julio de 2026"
+
+    document.getElementById("time").textContent = hora;
+    document.getElementById("date").textContent = fecha;
+  }
+
+  actualizar();
+  setInterval(actualizar, 1000);
+</script>
+</body>
+</html>

@@ -6,21 +6,17 @@
 <title>Reloj</title>
 <style>
   /* ============================================================
-     ZONA DE PERSONALIZACIÓN  —  toca solo estos valores
+     ZONA DE PERSONALIZACIÓN
+     Sin fondos, sin bordes, sin sombras.
+     Con color: los textos + el punto "en directo".
      ============================================================ */
   :root{
-    --card:   transparent;               /* fondo de la tarjeta        */
-    --fg:     #f4f3ee;               /* color de la hora           */
-    --muted:  #8a8b92;               /* color de fecha y etiqueta  */
-    --accent: #ff5c5c;               /* punto "en directo"         */
-    --line:   rgba(255,255,255,.07); /* borde sutil de la tarjeta  */
-    --radius: 18px;
-    /* Para cambiar la tipografía, sustituye la línea de abajo.
-       Por defecto usa la mono del sistema (SF Mono en tu Mac). */
-    --font: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --fg:     #f4f3ee;   /* color de la HORA  (claro, para Notion oscuro) */
+    --muted:  #9a9ba2;   /* color de ETIQUETA y FECHA                     */
+    --accent: #ff5c5c;   /* punto rojo "en directo"                       */
+    --font:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   }
-
-  /* La etiqueta de arriba y la zona horaria se cambian en el <script> */
+  /* Tamaños: cambia los clamp() de #time y #date (mínimo, escalado, máximo). */
   /* ============================================================ */
 
   *{ margin:0; padding:0; box-sizing:border-box; }
@@ -30,31 +26,23 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:var(--card);          /* flota sobre cualquier fondo de Notion */
+    background:transparent;      /* nada detrás */
     font-family:var(--font);
     -webkit-font-smoothing:antialiased;
   }
 
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:clamp(20px, 5vw, 34px) clamp(26px, 6vw, 44px);
-    box-shadow:0 12px 40px rgba(0,0,0,.35);
-    text-align:center;
-    line-height:1;
-  }
+  .clock{ text-align:center; line-height:1; }
 
-  .eyebrow{
+  .label{
     display:flex;
     align-items:center;
     justify-content:center;
     gap:8px;
     color:var(--muted);
-    font-size:.72rem;
+    font-size:.7rem;
     letter-spacing:.18em;
     text-transform:uppercase;
-    margin-bottom:clamp(12px, 3vw, 18px);
+    margin-bottom:clamp(10px, 3vw, 16px);
   }
 
   .dot{
@@ -70,19 +58,18 @@
     font-size:clamp(2.4rem, 9vw, 4rem);
     font-weight:500;
     letter-spacing:-.01em;
-    font-variant-numeric:tabular-nums;  /* dígitos de ancho fijo: no bailan */
+    font-variant-numeric:tabular-nums;   /* dígitos de ancho fijo */
   }
 
   #date{
     color:var(--muted);
-    font-size:clamp(.68rem, 2vw, .78rem);
-    margin-top:clamp(12px, 3vw, 18px);
-    letter-spacing:.01em;
+    font-size:clamp(.7rem, 2vw, .8rem);  /* fecha pequeña */
+    margin-top:clamp(10px, 3vw, 16px);
   }
 
   @keyframes pulse{
-    0%,100%{ opacity:1;   transform:scale(1);    }
-    50%    { opacity:.35; transform:scale(.82);  }
+    0%,100%{ opacity:1;   transform:scale(1);   }
+    50%    { opacity:.35; transform:scale(.82); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -91,16 +78,16 @@
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="eyebrow"><span class="dot"></span><span id="label"></span></div>
+  <div class="clock">
+    <div class="label"><span class="dot"></span><span id="label"></span></div>
     <div id="time">--:--:--</div>
     <div id="date">—</div>
   </div>
 
 <script>
   /* ====== AJUSTES ====== */
-  const ETIQUETA = "BARCELONA";      // texto de arriba (ponlo como quieras o "")
-  const ZONA     = "Europe/Madrid";  // zona horaria fija (correcta esté donde esté el equipo)
+  const ETIQUETA = "BARCELONA";      // texto de arriba (o "" para quitarlo)
+  const ZONA     = "Europe/Madrid";  // zona horaria fija
   /* ===================== */
 
   document.getElementById("label").textContent = ETIQUETA;
@@ -115,7 +102,7 @@
     let fecha = ahora.toLocaleDateString("es-ES", {
       timeZone: ZONA, weekday: "long", day: "numeric", month: "long", year: "numeric"
     });
-    fecha = fecha.charAt(0).toUpperCase() + fecha.slice(1); // "Martes, 7 de julio de 2026"
+    fecha = fecha.charAt(0).toUpperCase() + fecha.slice(1);
 
     document.getElementById("time").textContent = hora;
     document.getElementById("date").textContent = fecha;

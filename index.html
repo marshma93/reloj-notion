@@ -9,7 +9,7 @@
      ZONA DE PERSONALIZACIÓN  —  toca solo estos valores
      ============================================================ */
   :root{
-    --card:   #16171b;               /* fondo de la tarjeta        */
+    --card:   transparent;               /* fondo de la tarjeta        */
     --fg:     #f4f3ee;               /* color de la hora           */
     --muted:  #8a8b92;               /* color de fecha y etiqueta  */
     --accent: #ff5c5c;               /* punto "en directo"         */
@@ -30,7 +30,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:transparent;          /* flota sobre cualquier fondo de Notion */
+    background:var(--card);          /* flota sobre cualquier fondo de Notion */
     font-family:var(--font);
     -webkit-font-smoothing:antialiased;
   }
@@ -75,7 +75,7 @@
 
   #date{
     color:var(--muted);
-    font-size:clamp(.85rem, 2.5vw, .98rem);
+    font-size:clamp(.68rem, 2vw, .78rem);
     margin-top:clamp(12px, 3vw, 18px);
     letter-spacing:.01em;
   }

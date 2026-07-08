@@ -13,7 +13,6 @@
     --bg:     #191919;   /* fondo (imita Notion oscuro; transparent = sin fondo) */
     --fg:     #f4f3ee;   /* color de la frase              */
     --muted:  #9a9ba2;   /* color del autor               */
-    --accent: #ff5c5c;   /* puntito inicial               */
     --size:   clamp(.8rem, 1.7vw, .9rem);  /* TAMAÑO del texto (baja/sube aquí) */
     --font:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   }
@@ -33,33 +32,18 @@
 
   .w{
     width:100%;                 /* ocupa todo el ancho del bloque */
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
+    font-size:var(--size);
+    line-height:1.3;            /* interlineado ajustado, más estrecho */
     cursor:pointer;             /* clic = otra frase al azar */
     user-select:none;
   }
-
-  .dot{
-    flex:0 0 auto;
-    width:6px; height:6px; border-radius:50%;
-    background:var(--accent);
-    margin-top:.55em;           /* alinea el punto con la primera línea */
-  }
-
-  .text{
-    flex:1 1 auto;
-    font-size:var(--size);
-    line-height:1.5;
-  }
   #quote{ color:var(--fg); font-weight:500; }
-  #author{ color:var(--muted); white-space:nowrap; }
+  #author{ color:var(--muted); }
 </style>
 </head>
 <body>
   <div class="w" id="card" title="Clic para otra frase">
-    <span class="dot"></span>
-    <div class="text"><span id="quote">—</span> <span id="author">—</span></div>
+    <span id="quote">—</span> <span id="author">—</span>
   </div>
 
 <script>

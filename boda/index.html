@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuenta atrás — Boda</title>
+<style>
+  /* ============================================================
+     ZONA DE PERSONALIZACIÓN
+     ============================================================ */
+  :root{
+    --bg:     #191919;   /* fondo (imita Notion oscuro; transparent = sin fondo) */
+    --fg:     #f4f3ee;   /* número                         */
+    --muted:  #9a9ba2;   /* etiqueta y subtexto            */
+    --font:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  /* ============================================================ */
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html,body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;   /* alineado a la izquierda */
+    background:var(--bg);
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .w{ text-align:left; line-height:1; }
+
+  .label{
+    color:var(--muted);
+    font-size:.7rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:clamp(10px, 3vw, 16px);
+  }
+
+  .num{
+    color:var(--fg);
+    font-size:clamp(2.4rem, 9vw, 4rem);
+    font-weight:500;
+    letter-spacing:-.01em;
+    font-variant-numeric:tabular-nums;
+  }
+  .num small{
+    font-size:.38em; color:var(--muted); font-weight:500;
+    letter-spacing:0; margin-left:.4em;
+  }
+
+  .sub{
+    color:var(--muted);
+    font-size:clamp(.7rem, 2vw, .8rem);
+    margin-top:clamp(10px, 3vw, 16px);
+  }
+</style>
+</head>
+<body>
+  <div class="w">
+    <div class="label" id="label">BODA</div>
+    <div class="num"><span id="dias">—</span><small id="u">días</small></div>
+    <div class="sub" id="sub">—</div>
+  </div>
+
+<script>
+  /* ====== AJUSTES ====== */
+  const FECHA_BODA = "2026-10-17";   // <-- ¡¡CAMBIA por la fecha REAL!! formato AAAA-MM-DD
+  const ETIQUETA   = "BODA";
+  /* ===================== */
+
+  document.getElementById("label").textContent = ETIQUETA;
+
+  function actualizar(){
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const objetivo = new Date(FECHA_BODA + "T00:00:00");
+    const dias = Math.round((objetivo - hoy) / 86400000);
+
+    const el  = document.getElementById("dias");
+    const u   = document.getElementById("u");
+    const sub = document.getElementById("sub");
+
+    let f = objetivo.toLocaleDateString("es-ES", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
+    f = f.charAt(0).toUpperCase() + f.slice(1);
+
+    if(dias > 1){
+      el.textContent = dias;
+      sub.textContent = f + " · " + Math.floor(dias/7) + " semanas";
+    } else if(dias === 1){
+      el.textContent = "1";
+      sub.textContent = "¡Mañana! · " + f;
+    } else if(dias === 0){
+      u.style.display = "none"; el.style.fontSize = "3rem";
+      el.textContent = "¡Hoy!"; sub.textContent = f;
+    } else {
+      u.style.display = "none"; el.style.fontSize = "2.2rem";
+      el.textContent = "¡Enhorabuena!"; sub.textContent = "Os casasteis el " + f;
+    }
+  }
+
+  actualizar();
+  setInterval(actualizar, 3600000); // recalcula cada hora
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progreso — Mes y Año</title>
+<style>
+  /* ============================================================
+     ZONA DE PERSONALIZACIÓN
+     ============================================================ */
+  :root{
+    --bg:     #191919;
+    --fg:     #f4f3ee;
+    --muted:  #9a9ba2;
+    --track:  rgba(255,255,255,.10);
+    --fill:   #f4f3ee;
+    --font:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  /* ============================================================ */
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html,body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    background:var(--bg);
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .w{ width:min(320px, 82vw); }
+
+  .item{ margin-bottom:clamp(16px, 4vw, 22px); }
+  .item:last-child{ margin-bottom:0; }
+
+  .top{
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--muted);
+    font-size:.7rem; letter-spacing:.14em; text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .top .pct{
+    color:var(--fg); font-size:.9rem; letter-spacing:0;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .bar{ height:8px; border-radius:99px; background:var(--track); overflow:hidden; }
+  .fill{ height:100%; width:0; background:var(--fill); border-radius:99px; transition:width .5s ease; }
+</style>
+</head>
+<body>
+  <div class="w">
+    <div class="item">
+      <div class="top"><span id="lmes">MES</span><span class="pct" id="pmes">0%</span></div>
+      <div class="bar"><div class="fill" id="fmes"></div></div>
+    </div>
+    <div class="item">
+      <div class="top"><span id="lano">AÑO</span><span class="pct" id="pano">0%</span></div>
+      <div class="bar"><div class="fill" id="fano"></div></div>
+    </div>
+  </div>
+
+<script>
+  function actualizar(){
+    const now = new Date();
+
+    const iniMes  = new Date(now.getFullYear(), now.getMonth(),   1);
+    const finMes  = new Date(now.getFullYear(), now.getMonth()+1, 1);
+    const pctMes  = (now - iniMes) / (finMes - iniMes) * 100;
+
+    const iniAno  = new Date(now.getFullYear(),   0, 1);
+    const finAno  = new Date(now.getFullYear()+1, 0, 1);
+    const pctAno  = (now - iniAno) / (finAno - iniAno) * 100;
+
+    let mes = now.toLocaleDateString("es-ES", {month:"long"});
+    mes = mes.charAt(0).toUpperCase() + mes.slice(1);
+
+    document.getElementById("lmes").textContent = mes;
+    document.getElementById("lano").textContent = now.getFullYear();
+    document.getElementById("pmes").textContent = Math.round(pctMes) + "%";
+    document.getElementById("pano").textContent = Math.round(pctAno) + "%";
+    document.getElementById("fmes").style.width = pctMes.toFixed(1) + "%";
+    document.getElementById("fano").style.width = pctAno.toFixed(1) + "%";
+  }
+
+  actualizar();
+  setInterval(actualizar, 60000);
+</script>
+</body>
+</html>

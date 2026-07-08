@@ -30,18 +30,20 @@
     min-height:100vh;
     display:flex;
     align-items:center;
-    justify-content:center;
-    background:var(--bg);        /* imita el fondo de Notion -> sin blanco */
+    justify-content:flex-start;  /* <-- alineado a la IZQUIERDA */
+    background:var(--bg);
     font-family:var(--font);
     -webkit-font-smoothing:antialiased;
+    /* Separación del borde izquierdo. Súbelo si quieres más aire, o ponlo a 0. */
+    padding-left:clamp(4px, 3vw, 24px);
   }
 
-  .clock{ text-align:center; line-height:1; }
+  .clock{ text-align:left; line-height:1; }   /* <-- texto a la izquierda */
 
   .label{
     display:flex;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;  /* <-- punto + etiqueta a la izquierda */
     gap:8px;
     color:var(--muted);
     font-size:.7rem;

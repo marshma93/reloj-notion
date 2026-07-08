@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enfoque del día</title>
+<style>
+  /* ============================================================
+     ZONA DE PERSONALIZACIÓN
+     Colores aquí; las frases, en el <script> de abajo.
+     ============================================================ */
+  :root{
+    --bg:     #191919;   /* fondo (imita Notion oscuro; transparent = sin fondo) */
+    --fg:     #f4f3ee;   /* color de la frase              */
+    --muted:  #9a9ba2;   /* color del autor               */
+    --accent: #ff5c5c;   /* puntito inicial               */
+    --size:   clamp(.8rem, 1.7vw, .9rem);  /* TAMAÑO del texto (baja/sube aquí) */
+    --font:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  /* ============================================================ */
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html,body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    background:var(--bg);
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .w{
+    width:100%;                 /* ocupa todo el ancho del bloque */
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    cursor:pointer;             /* clic = otra frase al azar */
+    user-select:none;
+  }
+
+  .dot{
+    flex:0 0 auto;
+    width:6px; height:6px; border-radius:50%;
+    background:var(--accent);
+    margin-top:.55em;           /* alinea el punto con la primera línea */
+  }
+
+  .text{
+    flex:1 1 auto;
+    font-size:var(--size);
+    line-height:1.5;
+  }
+  #quote{ color:var(--fg); font-weight:500; }
+  #author{ color:var(--muted); white-space:nowrap; }
+</style>
+</head>
+<body>
+  <div class="w" id="card" title="Clic para otra frase">
+    <span class="dot"></span>
+    <div class="text"><span id="quote">—</span> <span id="author">—</span></div>
+  </div>
+
+<script>
+  /* ====== FRASES ======  añade/quita libremente: { q: "frase", a: "autor" } */
+  const FRASES = [
+    { q: "El obstáculo para la acción impulsa la acción. Lo que se interpone en el camino se vuelve el camino.", a: "Marco Aurelio" },
+    { q: "No es que tengamos poco tiempo: es que perdemos mucho.", a: "Séneca" },
+    { q: "No nos atrevemos a muchas cosas porque son difíciles; son difíciles porque no nos atrevemos.", a: "Séneca" },
+    { q: "Mientras esperamos el momento de vivir, la vida se nos escapa.", a: "Séneca" },
+    { q: "La vida, si sabes usarla, es larga.", a: "Séneca" },
+    { q: "El que está en todas partes no está en ninguna.", a: "Séneca" },
+    { q: "Aprovecha y ordena tu tiempo si no quieres que él te ordene a ti.", a: "Séneca" },
+    { q: "Ningún viento es bueno para quien no sabe a qué puerto va.", a: "Séneca" },
+    { q: "Tienes poder sobre tu mente, no sobre los hechos externos. Compréndelo y hallarás fuerza.", a: "Marco Aurelio" },
+    { q: "Empieza de una vez a ser lo que quieres llegar a ser.", a: "Marco Aurelio" },
+    { q: "No malgastes el tiempo discutiendo cómo debe ser un buen hombre. Sélo.", a: "Marco Aurelio" },
+    { q: "Nuestra vida es aquello en que la convierten nuestros pensamientos.", a: "Marco Aurelio" },
+    { q: "Haz cada acto de tu vida como si fuera el último.", a: "Marco Aurelio" },
+    { q: "La mejor venganza es no parecerte a quien te hizo el daño.", a: "Marco Aurelio" },
+    { q: "Piensa en lo que tienes y en cuánto lo desearías si no lo tuvieras.", a: "Marco Aurelio" },
+    { q: "No son las cosas las que nos perturban, sino lo que pensamos sobre ellas.", a: "Epicteto" },
+    { q: "Primero decide quién quieres ser; después, haz lo que haga falta.", a: "Epicteto" },
+    { q: "No expliques tu filosofía. Encárnala.", a: "Epicteto" },
+    { q: "Ningún gran logro nace de la noche a la mañana.", a: "Epicteto" },
+    { q: "Solo es libre quien es dueño de sí mismo.", a: "Epicteto" },
+    { q: "Hay cosas que dependen de ti y cosas que no; distingue entre ellas.", a: "Epicteto" },
+    { q: "No busques que las cosas sean como quieres; quiérelas como son y tendrás paz.", a: "Epicteto" },
+    { q: "Un viaje de mil kilómetros empieza con un solo paso.", a: "Lao Tse" },
+    { q: "Ocúpate de lo difícil mientras todavía es fácil.", a: "Lao Tse" },
+    { q: "Quien vence a otros es fuerte; quien se vence a sí mismo es poderoso.", a: "Lao Tse" },
+    { q: "En medio del caos también hay oportunidad.", a: "Sun Tzu" },
+    { q: "Las oportunidades se multiplican a medida que se aprovechan.", a: "Sun Tzu" },
+    { q: "No importa lo despacio que avances mientras no te detengas.", a: "Confucio" },
+    { q: "Quien mueve montañas empieza apartando piedras pequeñas.", a: "Confucio" },
+    { q: "El camino se encuentra en el entrenamiento.", a: "Miyamoto Musashi" },
+    { q: "No hagas nada que no sirva de nada.", a: "Miyamoto Musashi" },
+    { q: "Lo bueno, si breve, dos veces bueno.", a: "Baltasar Gracián" },
+    { q: "El sabio hace enseguida lo que el necio deja para el final.", a: "Baltasar Gracián" },
+    { q: "Saber y saberlo mostrar es valer dos veces.", a: "Baltasar Gracián" },
+    { q: "Bástese a sí mismo el sabio.", a: "Baltasar Gracián" },
+    { q: "Es más fácil resistir al principio que al final.", a: "Leonardo da Vinci" },
+    { q: "No dejes para mañana lo que puedas hacer hoy.", a: "Benjamin Franklin" },
+    { q: "No he fracasado: he encontrado diez mil formas que no funcionan.", a: "Thomas Edison" },
+    { q: "El genio es un 1% de inspiración y un 99% de sudor.", a: "Thomas Edison" },
+    { q: "Tanto si crees que puedes como si crees que no, tienes razón.", a: "Henry Ford" },
+    { q: "El fracaso es solo la ocasión de empezar de nuevo, esta vez con más cabeza.", a: "Henry Ford" },
+    { q: "El secreto para salir adelante es empezar.", a: "Mark Twain" },
+    { q: "La confianza en uno mismo es el primer secreto del éxito.", a: "Ralph Waldo Emerson" },
+    { q: "No basta con estar ocupado; también lo están las hormigas. La cuestión es en qué estás ocupado.", a: "Henry David Thoreau" },
+    { q: "Haz lo que puedas, con lo que tengas, donde estés.", a: "Theodore Roosevelt" },
+    { q: "Tómate tiempo para decidir, pero cuando llegue la hora de actuar, deja de pensar y actúa.", a: "Napoleón" },
+    { q: "La victoria es del más perseverante.", a: "Napoleón" },
+    { q: "Mientras hay vida, hay esperanza.", a: "Cicerón" },
+    { q: "Es mejor aprender tarde que nunca.", a: "Publilio Siro" },
+    { q: "La fortuna favorece a los audaces.", a: "Terencio" },
+    { q: "El mejor momento para plantar un árbol fue hace veinte años; el segundo mejor es hoy.", a: "Proverbio chino" },
+    { q: "Cae siete veces, levántate ocho.", a: "Proverbio japonés" },
+    { q: "Si quieres llegar rápido, ve solo; si quieres llegar lejos, ve acompañado.", a: "Proverbio africano" },
+    { q: "Roma no se construyó en un día.", a: "Proverbio" },
+    { q: "El que no arriesga, no gana.", a: "Proverbio" }
+  ];
+  /* ===================== */
+
+  const elQ = document.getElementById("quote");
+  const elA = document.getElementById("author");
+
+  function pintar(i){
+    elQ.textContent = "«" + FRASES[i].q + "»";
+    elA.textContent = "— " + FRASES[i].a;
+  }
+
+  // Frase del día: la misma todo el día, rotando (hora de Madrid)
+  function indiceDelDia(){
+    const now = new Date();
+    const f = new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/Madrid", year:"numeric", month:"2-digit", day:"2-digit"}).format(now);
+    const [y,m,d] = f.split("-").map(Number);
+    const dia = Math.floor(Date.UTC(y, m-1, d) / 86400000);
+    return ((dia % FRASES.length) + FRASES.length) % FRASES.length;
+  }
+
+  let actual = indiceDelDia();
+  pintar(actual);
+
+  document.getElementById("card").addEventListener("click", () => {
+    let n; do { n = Math.floor(Math.random() * FRASES.length); } while (n === actual && FRASES.length > 1);
+    actual = n; pintar(actual);
+  });
+</script>
+</body>
+</html>
